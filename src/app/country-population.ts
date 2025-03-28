@@ -1,7 +1,8 @@
 export interface CountryPopulation {
-    id: Number;
+    id: number;
     name: string;
-    iso2: number;
-    iso3: number;
+    iso2: string;
+    iso3: string;
     population: number;
+    cityCount: number;
 }
