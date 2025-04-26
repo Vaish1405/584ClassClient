@@ -1,16 +1,35 @@
 import { Injectable } from '@angular/core';
 import { LoginRequest } from './login-request';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LoginResponse } from './login-response';
+import { environment } from '../../environments/environment.development';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private _authStatus  = new BehaviorSubject<boolean>(false);
+  authStatus = this._authStatus.asObservable();
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
+
+  private setAuthStatus(value: boolean) {
+    this._authStatus.next(value);
+  }
 
   login(loginRequest: LoginRequest) :Observable<LoginResponse> {
+    let url = `${environment.baseUrl}api/Admin/login`;
+    return this.http.post<LoginResponse>(url, loginRequest)
+    .pipe(tap(loginResponse => {
+      if (loginResponse.success) {
+        localStorage.setItem("584jwtToken", loginResponse.token);
+        this.setAuthStatus(true);
+      }
+    }))
+  }
+
+  logout() {
 
   }
 }
