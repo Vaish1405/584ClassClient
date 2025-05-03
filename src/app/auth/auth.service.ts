@@ -30,6 +30,11 @@ export class AuthService {
   }
 
   logout() {
+    localStorage.removeItem("584jwtToken");
+    this.setAuthStatus(false);
+  }
 
+  isAuthenticated() :boolean{
+    return localStorage.getItem("584jwtToken") != null;
   }
 }
